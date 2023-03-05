@@ -41,7 +41,6 @@ class TestUntitled():
     self.driver.find_element(By.ID, "hledat").send_keys(word)
     # 4 | click | id=hlokalita |
     self.driver.find_element(By.ID, "hlokalita").click()
-
     # 5 | type | id=hlokalita | 66424
     self.driver.find_element(By.ID, "hlokalita").send_keys(area)
     # 6 | click | name=Submit |
