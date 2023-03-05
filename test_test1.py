@@ -13,7 +13,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+
 class TestUntitled():
+  SEARCH_WORD = 'BMW'
+  AREA = '60200'
+  URL = "https://www.bazos.cz/"
+
   def setup_method(self, method):
     options = Options()
     options.add_argument('--headless')
@@ -21,34 +26,33 @@ class TestUntitled():
     options.add_argument('--disable-dev-shm-usage')
     self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     self.vars = {}
-  
+
   def teardown_method(self, method):
     self.driver.quit()
-  
-  def test_untitled(self):
+
+  def test_untitled(self, word=SEARCH_WORD, area=AREA, url=URL):
     # Test name: Untitled
     # Step # | name | target | value
-    # 1 | open | / | 
-    self.driver.get("https://www.bazos.cz/")
-    # 2 | setWindowSize | 1235x902 | 
+    # 1 | open | / |
+    self.driver.get(url)
+    # 2 | setWindowSize | 1235x902 |
     self.driver.set_window_size(1235, 902)
     # 3 | type | id=hledat | hyundai i30
-    self.driver.find_element(By.ID, "hledat").send_keys("hyundai i30")
-    # 4 | click | id=hlokalita | 
+    self.driver.find_element(By.ID, "hledat").send_keys(word)
+    # 4 | click | id=hlokalita |
     self.driver.find_element(By.ID, "hlokalita").click()
-   
-    # 6 | type | id=hlokalita | 66424
-    self.driver.find_element(By.ID, "hlokalita").send_keys("66424")
-    # 7 | click | name=Submit | 
+
+    # 5 | type | id=hlokalita | 66424
+    self.driver.find_element(By.ID, "hlokalita").send_keys(area)
+    # 6 | click | name=Submit |
     self.driver.find_element(By.NAME, "Submit").click()
-  
+
     result = self.driver.find_element(By.CLASS_NAME, "maincontent")
     advertisment = result.find_elements(By.CLASS_NAME, "inzeratynadpis")
 
+    #print(advertisment)
     for i in advertisment:
+      print(i.text)
       if "Zobrazeno" in i.text:
         continue
-      assert 'hyundai' in i.text.lower()
-      #print(i.text)
-
-      
+      assert self.SEARCH_WORD.lower() in i.text.lower()
